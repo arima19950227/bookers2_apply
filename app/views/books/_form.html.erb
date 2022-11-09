@@ -1,0 +1,39 @@
+<%= form_with model: book, local:true do |f| %>
+  <div class="form-group">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: 'form-control book_title' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :opinion %>
+    <%= f.text_area :body, class: 'form-control book_body' %>
+  </div>
+
+   <div class="form-group">
+    <%= f.label :category %>
+    <%= f.text_field :category, class: 'form-control book_category' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-success' %>
+  </div>
+
+  <div id="post_raty">
+    <%= f.label :evaluation, "星評価：" %>
+    <%= f.hidden_field :evaluation, id: :review_star %>
+  </div>
+  <script>
+  // scriptファイルをどのidの部分に配置するかを指定
+  let elem = document.querySelector('#post_raty');
+  let opt = {
+    //星画像の指定などのオプションをここに記述,
+    size     : 36,
+    starOff:  '<%= asset_path('star-off.png') %>',
+    starOn : '<%= asset_path('star-on.png') %>',
+    starHalf: '<%= asset_path('star-half.png') %>',
+    scoreName: 'book[evaluation]',
+    half: true,
+   };
+  raty(elem,opt);
+</script>
+<% end %>
+

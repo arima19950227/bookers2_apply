@@ -1,0 +1,45 @@
+<table class="table">
+  <tbody>
+   <thead>
+    <h3>Books search for "<%= params[:keyword] %>"</h3>
+     <tr>
+      <th></th>
+      <th>Title</th>
+      <th>Option</th>
+      <th>Tag</th>
+      <th colspan="4"></th>
+     </tr>
+    </thead>
+      <% @books.each do |book| %>
+        <tr>
+          <td><%= image_tag book.user.get_profile_image(50,50) %></td>
+          <td><%= link_to book_path(book.id) do %>
+              <%= book.title %>
+              <% end %>
+          </td>
+          <td><%= book.body %></td>
+          <td><%= link_to book.category, book_search_book_path(keyword: book.category) %></td>
+          <td id= "favorite_buttons_<%= book.id %>">
+           <%= render 'favorites/favorite', book: book %></td>
+          <td>コメント数:<%= book.book_comments.count %></td>
+
+          <td id="post_raty<%= book.id %>"></td>
+            <script>
+             // scriptファイルをどのidの部分に配置するかを指定
+             let elem4<%= book.id %> = document.querySelector('#post_raty<%= book.id %>');
+             let opt4<%= book.id %> = {
+             //星画像の指定などのオプションをここに記述,
+             size     : 36,
+             starOff:  '<%= asset_path('star-off.png') %>',
+             starOn : '<%= asset_path('star-on.png') %>',
+             starHalf: '<%= asset_path('star-half.png') %>',
+             readOnly: true,
+             half: true,
+             score: <%= book.evaluation %>
+              };
+             raty(elem4<%= book.id %>,opt4<%= book.id %>);
+            </script>
+
+        </tr>
+   <% end %>
+</tbody>

@@ -1,0 +1,55 @@
+<table class='table'>
+  <tr><%= image_tag user.get_profile_image(100,100) %></tr>
+  <tr>
+	  <th>name</th>
+	  <th><%= user.name %></th>
+  </tr>
+  <tr>
+	  <th>introduction</th>
+	  <th><%= user.introduction %></th>
+  </tr>
+  <tr>
+    <th>followes</th>
+    <th><%= link_to user_followings_path(user) do %>
+      <%= user.followings.count %>
+      <% end %></th>
+  </tr>
+  <tr>
+    <th>followers</th>
+    <th><%= link_to user_followers_path(user) do %>
+      <%= user.followers.count %><% end %></th>
+  </tr>
+</table>
+<div class='row'>
+ <% if user == current_user %>
+   <%= link_to edit_user_path(user), class: "btn btn-outline-secondary btn-block" do %>
+    <i class="fas fa-user-cog"></i>
+  <% end %>
+ <% else %>
+  <% if current_user.following?(user) %>
+   <%= link_to "フォロー外す", user_relationships_path(user.id), method: :delete, class: "btn btn-sm btn-danger" %>
+  <% else %>
+   <%= link_to "フォローする", user_relationships_path(user.id), method: :post, class: "btn btn-success" %>
+  <% end %>
+ <% end %>
+
+<%# showページで見ているユーザーがログインユーザーでない場合%>
+ <% unless user.id == current_user.id %>
+ <%# ログインしているユーザーが@userをフォローしている且つ@userがログインしているユーザーをフォローしている場合%>
+ <% if (current_user.following? user) && (user.following? current_user) %>
+ <%# すでにチャットルームが存在している場合%>
+ <% if isRoom == true %>
+  <%= link_to "チャットへ", room_path(roomId), class: "btn btn-primary btn-lg" %>
+ <%#チャットルームが存在しない場合%>
+ <% else %>
+ <%#　コントローラーにパラメーター￥を送るための記述%>
+  <%= form_for room do |f| %>
+      <%= fields_for entry do |e| %>
+        <%= e.hidden_field :user_id, value: user.id %>
+      <% end %>
+      <%= f.submit "チャットを始める", class:"btn btn-primary btn-lg user-show-chat"%>
+    <% end %>
+  <% end %>
+  <% end %>
+<% end %>
+</div>
